@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>More Details Please</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+    body {
+        background: linear-gradient(to bottom, #4ec9b7, #0f6d70);
+        /* Light blue gradient background for the whole page */
+        margin: 0;
+        /* Remove default margin to ensure full-page background */
+        padding: 0;
+        /* Remove default padding to ensure full-page background */
+    }
+
+    .main {
+        max-width: 600px;
+        margin: 0 auto;
+        background: rgb(234, 243, 246);
+        /* Optional: Add a white background to the container */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        /* Optional: Add a box shadow to the container */
+    }
+
+    h1,
+    h2,
+    label {
+        color: #FF1493;
+        /* Dark pink text color */
+    }
+
+    input[type="text"],
+    input[type="datetime-local"],
+    input[type="number"],
+    textarea,
+    #description {
+        background-color: #fcd4da;
+        /* Light pink input background color */
+        color: #900c52;
+        /* Dark pink text color for input fields */
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 5px 0;
+    }
+
+    button {
+        background-color: #FF1493;
+        /* Dark pink background for the submit button */
+        color: white;
+        /* White text color for the button */
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+
+    /* Style any other elements as needed */
+</style>
+
+
+<body>
+    <div class="container main mt-5" style="max-width: 600px;">
+        <div class="container mt-5 text-center">
+            <h1 class="mb-4">More Details Please!</h1>
+            <h2 class="mb-4" style="font-size: 1.25rem;">Please fill out the form with details about the plan/activity
+                you'd like to do with me:</h2>
+        </div>
+
+        <form id="requestForm">
+            <div class="form-group">
+                <label class="mt-2 mb-0" for="name">Your Name:</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label class="mt-2 mb-0" for="plan">Name of Activity / Plan: </label>
+                <input type="text" class="form-control" id="plan" name="plan" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label class="mt-2 mb-0" for="when">When: </label>
+                    <input type="datetime-local" class="form-control" id="when" name="when" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="mt-2 mb-0" for="time">For how long? </label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="time" name="time" required min="0">
+                        <div class="input-group-append">
+                            <span class="input-group-text">hours</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="mt-2 mb-0" for="where">Where: </label>
+                <input type="text" class="form-control" id="where" name="where" required>
+            </div>
+            <div class="form-group">
+                <label class="mt-2 mb-0" for="who">Who will be there: </label>
+                <input type="text" class="form-control" id="who" name="who" required>
+            </div>
+            <div class="form-group">
+                <label class="mt-2 mb-0" for="driving">Who's Driving? </label>
+                <input type="text" class="form-control" id="driving" name="driving" required>
+            </div>
+            <div class="form-group">
+                <label class="mt-2 mb-0" for="description">Please provide a detailed description of the plan: </label>
+                <textarea class="form-control" id="description" name="description" rows="5"></textarea>
+                <small id="descriptionError" class="text-danger"></small>
+            </div>
+            <button type="submit" class="btn btn-primary mb-5">Submit</button>
+        </form>
+
+    </div>
+
+    <!-- Include the Email.js library -->
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        // Initialize Email.js with your User ID
+        emailjs.init("wjPyEgWWN49H06xRC");
+
+        document.getElementById("requestForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const description = this.elements.description.value.toLowerCase();
+            const descriptionError = document.getElementById("descriptionError");
+
+            // Reset the error message and remove the is-invalid class
+            descriptionError.textContent = '';
+            document.getElementById("description").classList.remove("is-invalid");
+            //add is-invalid class if idk or i dont know is used
+            if (description.includes("idk") || description.includes("i dont know") || description.includes("i don't know")) {
+                descriptionError.textContent = "Please don't use the word 'i dont know' or 'idk' in the description. Know! I did not send you this form for you to not know.";
+                document.getElementById("description").classList.add("is-invalid");
+                return; // Don't submit the form
+            } else if (description.length < 100) {
+                descriptionError.textContent = "Please provide more details (at least 100 characters).";
+                document.getElementById("description").classList.add("is-invalid");
+                return; // Don't submit the form
+            } else if (description.split(' ').length < 5) {
+                descriptionError.textContent = "WHAT is this?? Please use actual words...  ";
+                document.getElementById("description").classList.add("is-invalid");
+                return; // Don't submit the form
+            }
+
+            // Get the form data
+            const formData = new FormData(event.target);
+            const name = formData.get("name");
+            const plan = formData.get("plan");
+            const whenInput = formData.get("when");
+            const when = new Date(whenInput).toLocaleString();
+            const time = formData.get("time");
+            const where = formData.get("where");
+            const who = formData.get("who");
+            const driving = formData.get("driving");
+            const description_input = formData.get("description");
+
+            // Combine all the form data into a single sentence
+            const sentence = `Name: ${name}\nPlan: ${plan}\nWhen: ${when}\nTime: ${time} hours\nWhere: ${where}\nWho: ${who}\nDriving: ${driving}\nDescription: ${description_input}`;
+
+            // Send the email with the sentence as the content
+            emailjs.send("service_xv5fadj", "template_ekj1435", {
+                content: sentence, // Use the combined sentence as content
+            })
+                .then(function (response) {
+                    // alert("Email sent successfully!");
+                    // Optionally, you can redirect the user to a thank-you page.
+                    window.location.href = "thankyou.html";
+                })
+                .catch(function (error) {
+                    alert("There seems to be an issue.. please try again. (Or message me that its broken!)")
+                    console.error("Email could not be sent:", error);
+                });
+
+            console.log(sentence);
+
+        });
+    </script>
+
+</body>
+
+</html>

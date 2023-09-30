@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You!</title>
+</head>
+
+<body>
+    <div style="text-align: center;">
+        <h1>Thank You!</h1>
+        <p>Your submission has been received.</p>
+        <img id="planGIF" alt="Plan GIF">
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    // Array of GIF file names
+    const gifs = ["gif1.gif", "gif2.gif", "gif3.gif", "gif4.gif", "gif5.gif", "gif6.gif"];
+
+    // Choose a random index from the array
+    const randomIndex = Math.floor(Math.random() * gifs.length);
+
+    // Get the <img> element by its id
+    const imgElement = document.getElementById("planGIF");
+
+    // Set the source (src) of the <img> element to the randomly chosen GIF
+    imgElement.src = gifs[randomIndex];
+});
+
+    </script>
+</body>
+
+</html>
