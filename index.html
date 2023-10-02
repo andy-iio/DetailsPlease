@@ -147,6 +147,10 @@
                 descriptionError.textContent = "WHAT is this?? Please use actual words...  ";
                 document.getElementById("description").classList.add("is-invalid");
                 return; // Don't submit the form
+            } else if (!description.includes('.')) {
+                descriptionError.textContent = "Please use proper sentence structure and DO NOT just spam the auto suggestion button on your phone keyboard. GIVE ME DETAILS. Or your request will be discarded. ";
+                document.getElementById("description").classList.add("is-invalid");
+                return; // Don't submit the form
             }
 
             // Get the form data
